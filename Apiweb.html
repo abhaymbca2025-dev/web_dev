@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WXTERM // Weather Terminal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #00ff88;
+  --bg: #050a05;
+  --text: #00ff88;
+}
+
+body {
+  font-family: 'Share Tech Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.07) 2px,
+    rgba(0,0,0,0.07) 4px
+  );
+}
+</style>
+</head>
+
+<body>
+
+<h2>WXTERM // WEATHER DATA</h2>
+<div id="weather">LOADING WEATHER DATA...</div>
+
+<script>
+const apiKey = "4f10a57c8d96ed4a66119f0ddd778cc"; // yaha apni API key daalo
+const city = "Bhopal";
+
+async function getWeather() {
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+    );
+
+    const data = await res.json();
+
+    document.getElementById("weather").innerHTML = `
+      TEMP: ${data.main.temp}°C <br>
+      CONDITION: ${data.weather[0].main} <br>
+      HUMIDITY: ${data.main.humidity}% <br>
+      WIND: ${data.wind.speed} m/s
+    `;
+  } catch (err) {
+    document.getElementById("weather").innerHTML = "ERROR FETCHING DATA";
+  }
+}
+
+getWeather();
+</script>
+
+</body>
+</html>
